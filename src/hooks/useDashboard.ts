@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { useFocusEffect } from "expo-router";
 import { authHeaders, getApiUrl } from "../lib/api";
 import type { LoanRecord, LoanSummary } from "../types/loans";
 
@@ -18,6 +19,11 @@ export function useDashboard(): DashboardData {
   const [refreshKey, setRefreshKey] = useState(0);
 
   const refresh = useCallback(() => setRefreshKey((value) => value + 1), []);
+  useFocusEffect(
+    useCallback(() => {
+      refresh();
+    }, [refresh]),
+  );
 
   useEffect(() => {
     let active = true;

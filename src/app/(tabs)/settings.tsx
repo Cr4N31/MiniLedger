@@ -7,6 +7,9 @@ import {
   ScrollView,
 } from "react-native";
 import { themes, spacing, radius, typography } from "@/constants/theme";
+import { Alert } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { router } from "expo-router";
 
 export default function SettingsScreen() {
   const scheme = useColorScheme();
@@ -59,6 +62,24 @@ export default function SettingsScreen() {
       ],
     },
   ] as const;
+
+  async function handleLogout() {
+    Alert.alert("Log out", "Are you sure you want to log out of MiniLedger?", [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Log out",
+        style: "destructive",
+        onPress: async () => {
+          try {
+            await AsyncStorage.removeItem("miniledger_token");
+            router.replace("/login");
+          } catch {
+            Alert.alert("Error", "Couldn't log out. Please try again.");
+          }
+        },
+      },
+    ]);
+  }
 
   return (
     <ScrollView
@@ -197,6 +218,33 @@ export default function SettingsScreen() {
           </View>
         </View>
       ))}
+      <Pressable
+        onPress={handleLogout}
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: 17,
+          marginTop: 12,
+          marginBottom: 24,
+          borderRadius: radius.lg,
+          borderWidth: 1,
+          borderColor: colors.border,
+          backgroundColor: colors.surface,
+        }}
+      >
+        <Ionicons name="log-out-outline" size={20} color="#DC4545" />
+        <Text
+          style={{
+            marginLeft: 10,
+            color: "#DC4545",
+            fontSize: 14,
+            fontWeight: "600",
+          }}
+        >
+          Log out
+        </Text>
+      </Pressable>
 
       <Text
         style={{
