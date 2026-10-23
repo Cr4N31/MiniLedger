@@ -8,6 +8,7 @@ import {
 } from "../../constants/theme";
 import { formatDate, money } from "../../utils/formatters";
 import type { LoanRecord } from "../../types/loans";
+import { useRouter } from "expo-router";
 
 type Props = {
   colors: ThemeColors;
@@ -17,28 +18,19 @@ type Props = {
 };
 
 export default function RecentLoans({ colors, loans, loading, error }: Props) {
+  const router = useRouter();
   const styles = makeStyles(colors);
+
   return (
     <>
-      <View style={styles.sectionHeader}>
-        <View>
-          <Text style={styles.sectionEyebrow}>YOUR RECORDS</Text>
-          <Text style={styles.sectionTitle}>Recent loans</Text>
-        </View>
-        <Pressable
-          accessibilityRole="button"
-          onPress={() =>
-            Alert.alert(
-              "Loan list",
-              "We'll connect this to your loan list screen next.",
-            )
-          }
-          style={styles.textAction}
-        >
-          <Text style={styles.actionText}>View all</Text>
-          <Ionicons name="arrow-forward" size={16} color={colors.primary} />
-        </Pressable>
-      </View>
+      <Pressable
+        accessibilityRole="button"
+        onPress={() => router.push("/(tabs)/loans")}
+        style={styles.textAction}
+      >
+        <Text style={styles.actionText}>View all</Text>
+        <Ionicons name="arrow-forward" size={16} color={colors.primary} />
+      </Pressable>
       <View style={styles.loanList}>
         {error ? (
           <Text style={[styles.message, { color: colors.danger }]}>
